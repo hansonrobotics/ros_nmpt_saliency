@@ -31,27 +31,26 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	    im=cv_ptr->image;
 		vector<KeyPoint> pts;
 		salTracker.detect(im, pts);
-		salTracker.getSalImage(sal);
+		salTracker.getSalMap(sal);
         // Get Actual Min and Max for saliency
 		double min, max; 
 		Point minloc, maxloc; 
 		minMaxLoc(sal, &min, &max, &minloc, &maxloc); 
         // Use the point tracker to get the moving point.
-        // Consider remove this, if we have something similar in blender.
-		lqrpt[0] = maxloc.x*1.0 / sal.cols;
-		lqrpt[1] = maxloc.y*1.0 / sal.rows; 
-		salientSpot.setTrackerTarget(lqrpt);
-		salientSpot.updateTrackerPosition();
-		lqrpt = salientSpot.getCurrentPosition();
+//		lqrpt[0] = maxloc.x*1.0 / sal.cols;
+//		lqrpt[1] = maxloc.y*1.0 / sal.rows;
+//		salientSpot.setTrackerTarget(lqrpt);
+//		salientSpot.updateTrackerPosition();
+//		lqrpt = salientSpot.getCurrentPosition();
         // Publish message
 		sensor_msgs::RegionOfInterest roi;
-		roi.x_offset = (int) (lqrpt[0] * sal.cols);
-		roi.y_offset = (int) (lqrpt[1] * sal.rows);
-		roi.width = 2;
-		roi.height = 2;
+		roi.x_offset = maxloc.x;
+		roi.y_offset = maxloc.y;
+		roi.width = 1;
+		roi.height = 1;
 		roi.do_rectify = false;
 		pub.publish(roi);
-
+ 
    }
    catch (...)
    {
@@ -67,8 +66,6 @@ int main(int argc, char **argv)
      //cvStartWindowThread();
      image_transport::ImageTransport it(nh);
      image_transport::Subscriber sub = it.subscribe("/camera/image_raw", 1, imageCallback);
-     
-     
      pub = nh.advertise<sensor_msgs::RegionOfInterest>("/nmpt_roi", 50);
      
      salientSpot.setTrackerTarget(lqrpt);
