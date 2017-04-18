@@ -1,4 +1,4 @@
-### Visual Salience Feature Perception using NMPT
+## Visual Salience Feature Perception using NMPT
 ------------
 
 ### Introduction
@@ -11,7 +11,7 @@ Besides that, it contains a node that lets Sophia track salient features in the 
 4. MessageFile: `targets.msg`  that subsumes data which have `geometry_msgs/Point[]`  and `float32` type </br>
 
 ### How it works
-####Salient Point Detector
+#### Salient Point Detector
 This node is composed of two features, namely, edge detection and movement detection. The edge detection component returns the attributes of points addressed by the edge. On the other hand, the movement detector gets the smoothed absolute difference of the current frame and the frame prior to it. Points from the resultant edges are sent to the salience detector which further decides on the saliency of a point relative to other points.
 
 #### Degree of Salience
